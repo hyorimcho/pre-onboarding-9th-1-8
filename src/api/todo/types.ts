@@ -1,3 +1,3 @@
-export interface createTodoType {
+export interface CreateTodoType {
   todo: string;
 }
