@@ -1,5 +1,4 @@
 import { createTodo, getTodo } from '@/api/todo';
-import { createTodoType } from '@/api/todo/types';
 import TodoForm from '@/components/todo/TodoForm';
 import TodoItem from '@/components/todo/TodoItem';
 import { ITodo } from '@/pages/TodoPage/types';
@@ -14,9 +13,12 @@ const TodoPage = () => {
       .catch((err) => alert(err.response.data.log || err.log));
   }, []);
 
-  const onSubmit = (todo: createTodoType) => {
+  const onSubmit = (todo: string) => {
     createTodo(todo)
-      .then(() => getTodos())
+      .then((res) =>
+        // getTodos()
+        setTodos([...todos, res.data]),
+      )
       .catch((err) => alert(err.response.data.log || err.log));
   };
 
@@ -28,7 +30,14 @@ const TodoPage = () => {
       <TodoForm submitFn={onSubmit} />
       <ul>
         {todos.map((todo) => {
-          return <TodoItem key={todo.id} todo={todo} />;
+          return (
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              todos={todos}
+              setTodos={setTodos}
+            />
+          );
         })}
       </ul>
     </div>
