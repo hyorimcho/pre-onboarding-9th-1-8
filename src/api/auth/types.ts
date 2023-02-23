@@ -1,4 +1,4 @@
-export interface postSignParam {
+export interface postSignType {
   email: string;
   password: string;
 }
