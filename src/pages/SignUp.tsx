@@ -1,14 +1,21 @@
 import { useNavigate } from 'react-router-dom';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { AxiosError } from 'axios';
+import { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { signUp } from '@/api/api';
 import { IsValid } from '@/lib/utils/validation';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [disabled, setDisabled] = useState(true);
   const [values, setValues] = useState({
     email: '',
     password: '',
+  });
+
+  useEffect(() => {
+    if (localStorage.token) {
+      alert('부적절한 접근입니다');
+      navigate('/todo');
+    }
   });
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -22,18 +29,15 @@ const SignUp = () => {
     });
   };
 
-  console.log('value.email', values.email);
-  console.log('values.password', values.password);
-
   const onSubmit = async () => {
     const { email, password } = values;
     const res = await signUp(email, password);
-    console.log('res', res);
     localStorage.setItem('token', res.access_token);
     if (res.access_token) {
       navigate('/signin');
     }
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <h2>회원가입</h2>
@@ -61,6 +65,7 @@ const SignUp = () => {
         type="submit"
         disabled={IsValid({ email: values.email, password: values.password })}
         onClick={onSubmit}
+        data-testid="signup-button"
       >
         제출
       </button>
